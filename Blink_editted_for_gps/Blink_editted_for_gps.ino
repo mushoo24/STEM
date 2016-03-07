@@ -1,0 +1,67 @@
+
+
+#include <TinyGPS++.h>
+#include <SoftwareSerial.h>
+
+/*
+  Blink
+  Turns on an LED on for one second, then off for one second, repeatedly.
+
+  Most Arduinos have an on-board LED you can control. On the Uno and
+  Leonardo, it is attached to digital pin 13. If you're unsure what
+  pin the on-board LED is connected to on your Arduino model, check
+  the documentation at http://www.arduino.cc
+
+  This example code is in the public domain.
+
+  modified 8 May 2014
+  by Scott Fitzgerald
+ */
+TinyGPSPlus gps;
+int GPSBaud = 4800;
+
+int RXPin = 2;
+int TXPin = 3;
+SoftwareSerial gpsSerial(RXPin, TXPin);
+
+
+// the setup function runs once when you press reset or power the board
+void setup() {
+  // initialize digital pin 13 as an output.
+  pinMode(13, OUTPUT);
+
+  Serial.begin(9600);
+    gpsSerial.begin(GPSBaud);
+
+  // Start the software serial port at the GPS's default baud
+  //gpsSerial.begin(GPSBaud);
+
+  Serial.println(F("DeviceExample.ino"));
+  Serial.println(F("A simple demonstration of TinyGPS++ with an attached GPS module"));
+//Serial.print(F("Testing TinyGPS++ library v. ")); Serial.println(TinyGPSPlus::libraryVersion());
+  Serial.println(F("by Mikal Hart"));
+  Serial.println();
+  Serial.println("Hi from init");
+}
+
+// the loop function runs over and over again forever
+void loop() {
+
+// GPS
+  if (gpsSerial.available() > 0){
+     Serial.println("GPS IS availalbe...");
+        if (gps.encode(gpsSerial.read())){
+          Serial.println("I have data!!! ");
+          
+        }
+  } else {
+    Serial.println("GPS is not available, sorry");
+  }
+
+// blink
+  Serial.println("hi");
+  digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(1000);              // wait for a second
+  digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
+  delay(1000);              // wait for a second
+}
